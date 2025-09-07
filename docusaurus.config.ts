@@ -106,6 +106,21 @@ const config: Config = {
             },
           ],
         },
+        {
+          type: 'dropdown',
+          label: '📈 Timeline',
+          position: 'left',
+          items: [
+            {
+              label: 'Timeline Básica',
+              to: '/timeline-produto',
+            },
+            {
+              label: 'Timeline Detalhada',
+              to: '/timeline-personalizada',
+            },
+          ],
+        },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/facebook/docusaurus',

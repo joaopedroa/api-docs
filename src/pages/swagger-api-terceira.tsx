@@ -418,60 +418,138 @@ const apiSpec = {
 
 function SwaggerApiTerceira() {
   useEffect(() => {
-    // Carregar CSS do Swagger UI
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css';
-    document.head.appendChild(link);
+    let isMounted = true;
+    let retryCount = 0;
+    const maxRetries = 3;
 
-    // Carregar JavaScript do Swagger UI Bundle
-    const script1 = document.createElement('script');
-    script1.src = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js';
+    const loadSwaggerUI = () => {
+      if (!isMounted) return;
 
-    // Carregar JavaScript do Swagger UI Standalone Preset
-    const script2 = document.createElement('script');
-    script2.src = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-standalone-preset.js';
+      // Verificar se já existe
+      const existingContainer = document.getElementById('swagger-ui');
+      if (existingContainer) {
+        existingContainer.innerHTML = '';
+      }
 
-    script1.onload = () => {
-      script2.onload = () => {
+      // Carregar CSS do Swagger UI
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css';
+      link.id = 'swagger-ui-css';
+      document.head.appendChild(link);
+
+      // Carregar JavaScript do Swagger UI Bundle
+      const script1 = document.createElement('script');
+      script1.src = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js';
+      script1.id = 'swagger-ui-bundle';
+
+      // Carregar JavaScript do Swagger UI Standalone Preset
+      const script2 = document.createElement('script');
+      script2.src = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-standalone-preset.js';
+      script2.id = 'swagger-ui-standalone';
+
+      const initializeSwagger = () => {
+        if (!isMounted) return;
+
         // @ts-ignore
         if (window.SwaggerUIBundle && window.SwaggerUIStandalonePreset) {
-          // @ts-ignore
-          window.SwaggerUIBundle({
-            spec: apiSpec,
-            dom_id: '#swagger-ui',
-            deepLinking: true,
-            presets: [
-              // @ts-ignore
-              window.SwaggerUIBundle.presets.apis,
-              // @ts-ignore
-              window.SwaggerUIStandalonePreset
-            ],
-            plugins: [
-              // @ts-ignore
-              window.SwaggerUIBundle.plugins.DownloadUrl
-            ],
-            layout: "StandaloneLayout",
-            tryItOutEnabled: false, // Modo somente leitura
-            supportedSubmitMethods: [], // Remove métodos de teste
-            validatorUrl: null // Remove validação online
-          });
+          try {
+            // @ts-ignore
+            window.SwaggerUIBundle({
+              spec: apiSpec,
+              dom_id: '#swagger-ui',
+              deepLinking: true,
+              presets: [
+                // @ts-ignore
+                window.SwaggerUIBundle.presets.apis,
+                // @ts-ignore
+                window.SwaggerUIStandalonePreset
+              ],
+              plugins: [
+                // @ts-ignore
+                window.SwaggerUIBundle.plugins.DownloadUrl
+              ],
+              layout: "StandaloneLayout",
+              tryItOutEnabled: false,
+              supportedSubmitMethods: [],
+              validatorUrl: null,
+              docExpansion: "list",
+              defaultModelsExpandDepth: 1,
+              defaultModelExpandDepth: 1,
+              displayRequestDuration: false,
+              showExtensions: false,
+              showCommonExtensions: false,
+              filter: false,
+              showRequestHeaders: false,
+              showOperationId: false,
+              displayOperationId: false,
+              showMutatedRequest: false,
+              onComplete: () => {
+                if (!isMounted) return;
+                setTimeout(() => {
+                  const style = document.createElement('style');
+                  style.textContent = `
+                    .download-url-wrapper { display: none !important; }
+                  `;
+                  document.head.appendChild(style);
+                }, 100);
+              }
+            });
+          } catch (error) {
+            console.error('Erro ao inicializar Swagger UI:', error);
+            if (retryCount < maxRetries) {
+              retryCount++;
+              setTimeout(loadSwaggerUI, 1000);
+            }
+          }
+        } else {
+          if (retryCount < maxRetries) {
+            retryCount++;
+            setTimeout(loadSwaggerUI, 1000);
+          }
         }
       };
+
+      script1.onload = () => {
+        script2.onload = () => {
+          setTimeout(initializeSwagger, 100);
+        };
+        script2.onerror = () => {
+          if (retryCount < maxRetries) {
+            retryCount++;
+            setTimeout(loadSwaggerUI, 1000);
+          }
+        };
+      };
+
+      script1.onerror = () => {
+        if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(loadSwaggerUI, 1000);
+        }
+      };
+
+      document.head.appendChild(script1);
+      document.head.appendChild(script2);
     };
 
-    document.head.appendChild(script1);
-    document.head.appendChild(script2);
+    // Iniciar carregamento
+    loadSwaggerUI();
 
     return () => {
+      isMounted = false;
       // Cleanup
-      if (document.head.contains(link)) {
+      const link = document.getElementById('swagger-ui-css');
+      const script1 = document.getElementById('swagger-ui-bundle');
+      const script2 = document.getElementById('swagger-ui-standalone');
+      
+      if (link && document.head.contains(link)) {
         document.head.removeChild(link);
       }
-      if (document.head.contains(script1)) {
+      if (script1 && document.head.contains(script1)) {
         document.head.removeChild(script1);
       }
-      if (document.head.contains(script2)) {
+      if (script2 && document.head.contains(script2)) {
         document.head.removeChild(script2);
       }
     };

@@ -306,91 +306,67 @@ const apiSpec = {
   ]
 };
 
-function SwaggerApiPrincipal() {
+function SwaggerApiPrincipalSimple() {
   useEffect(() => {
-    // Adicionar CSS para animação
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Função para carregar Swagger UI
-    const loadSwaggerUI = () => {
-      console.log('Iniciando carregamento do Swagger UI...');
-      
-      // Limpar container existente
-      const container = document.getElementById('swagger-ui');
-      if (container) {
-        container.innerHTML = `
-          <div style="text-align: center; padding: 40px;">
-            <p>Carregando Swagger UI...</p>
-            <div style="margin-top: 20px;">
-              <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-            </div>
-          </div>
-        `;
-      }
-
-      // Verificar se os scripts já existem
-      if (window.SwaggerUIBundle && window.SwaggerUIStandalonePreset) {
-        initializeSwagger();
-        return;
-      }
-
-      // Carregar CSS
-      if (!document.getElementById('swagger-ui-css')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css';
-        link.id = 'swagger-ui-css';
-        document.head.appendChild(link);
-      }
-
-      // Carregar scripts se não existirem
-      if (!document.getElementById('swagger-ui-bundle')) {
-        const script1 = document.createElement('script');
-        script1.src = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js';
-        script1.id = 'swagger-ui-bundle';
-        script1.onload = () => {
-          if (!document.getElementById('swagger-ui-standalone')) {
-            const script2 = document.createElement('script');
-            script2.src = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-standalone-preset.js';
-            script2.id = 'swagger-ui-standalone';
-            script2.onload = () => {
-              setTimeout(initializeSwagger, 100);
-            };
-            document.head.appendChild(script2);
-          } else {
-            setTimeout(initializeSwagger, 100);
-          }
+    console.log('Componente montado, iniciando carregamento...');
+    
+    // Função para carregar scripts
+    const loadScript = (src: string, id: string): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        if (document.getElementById(id)) {
+          resolve();
+          return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = src;
+        script.id = id;
+        script.onload = () => {
+          console.log(`Script ${id} carregado`);
+          resolve();
         };
-        document.head.appendChild(script1);
-      } else if (!document.getElementById('swagger-ui-standalone')) {
-        const script2 = document.createElement('script');
-        script2.src = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-standalone-preset.js';
-        script2.id = 'swagger-ui-standalone';
-        script2.onload = () => {
-          setTimeout(initializeSwagger, 100);
+        script.onerror = () => {
+          console.error(`Erro ao carregar script ${id}`);
+          reject();
         };
-        document.head.appendChild(script2);
-      } else {
-        setTimeout(initializeSwagger, 100);
-      }
+        document.head.appendChild(script);
+      });
     };
 
-    const initializeSwagger = () => {
-      console.log('Tentando inicializar Swagger UI...');
-      console.log('SwaggerUIBundle disponível:', !!window.SwaggerUIBundle);
-      console.log('SwaggerUIStandalonePreset disponível:', !!window.SwaggerUIStandalonePreset);
-      
+    // Função para carregar CSS
+    const loadCSS = (href: string, id: string): Promise<void> => {
+      return new Promise((resolve) => {
+        if (document.getElementById(id)) {
+          resolve();
+          return;
+        }
+        
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.id = id;
+        link.onload = () => {
+          console.log(`CSS ${id} carregado`);
+          resolve();
+        };
+        document.head.appendChild(link);
+      });
+    };
+
+    // Função principal de carregamento
+    const loadSwaggerUI = async () => {
       try {
+        console.log('Carregando CSS...');
+        await loadCSS('https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css', 'swagger-ui-css');
+        
+        console.log('Carregando scripts...');
+        await loadScript('https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js', 'swagger-ui-bundle');
+        await loadScript('https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-standalone-preset.js', 'swagger-ui-standalone');
+        
+        console.log('Inicializando Swagger UI...');
+        
         // @ts-ignore
         if (window.SwaggerUIBundle && window.SwaggerUIStandalonePreset) {
-          console.log('Inicializando Swagger UI...');
           // @ts-ignore
           window.SwaggerUIBundle({
             spec: apiSpec,
@@ -434,19 +410,14 @@ function SwaggerApiPrincipal() {
             }
           });
         } else {
-          console.log('Swagger UI não carregado, tentando novamente...');
-          setTimeout(loadSwaggerUI, 1000);
+          console.error('SwaggerUIBundle ou SwaggerUIStandalonePreset não disponível');
         }
       } catch (error) {
-        console.error('Erro ao inicializar Swagger UI:', error);
-        setTimeout(loadSwaggerUI, 1000);
+        console.error('Erro ao carregar Swagger UI:', error);
       }
     };
 
-    // Iniciar carregamento
     loadSwaggerUI();
-
-    // Cleanup não é necessário pois os scripts ficam globais
   }, []);
 
   return (
@@ -473,13 +444,6 @@ function SwaggerApiPrincipal() {
             </div>
           </div>
         </div>
-        
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
 
         <div style={{ marginTop: '40px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
           <h2>📋 Informações da API</h2>
@@ -506,4 +470,4 @@ function SwaggerApiPrincipal() {
   );
 }
 
-export default SwaggerApiPrincipal;
+export default SwaggerApiPrincipalSimple;
