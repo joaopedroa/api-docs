@@ -11,11 +11,12 @@ Documentação completa da API construída com Docusaurus e integração com Swa
 ## 📋 Funcionalidades
 
 - ✅ **Múltiplas APIs** organizadas no sidebar
-- ✅ **Swagger UI interativo** para cada API
+- ✅ **Swagger UI interativo** via iframe (compatível com SSG)
 - ✅ **Documentação em Markdown** com exemplos
 - ✅ **Design responsivo** e moderno
 - ✅ **Deploy automático** no GitHub Pages
 - ✅ **Suporte a tema escuro/claro**
+- ✅ **Arquivos OpenAPI** para download
 
 ## 🔧 Como Usar Localmente
 
