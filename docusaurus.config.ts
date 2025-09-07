@@ -87,6 +87,25 @@ const config: Config = {
           position: 'left',
           label: 'Documentação',
         },
+        {
+          type: 'dropdown',
+          label: '🔧 Swagger APIs',
+          position: 'left',
+          items: [
+            {
+              label: 'API Principal',
+              to: '/swagger-api-principal',
+            },
+            {
+              label: 'API Secundária',
+              to: '/swagger-api-secundaria',
+            },
+            {
+              label: 'API Terceira',
+              to: '/swagger-api-terceira',
+            },
+          ],
+        },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/facebook/docusaurus',

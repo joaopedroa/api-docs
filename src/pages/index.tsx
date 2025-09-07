@@ -30,7 +30,7 @@ function HomepageHeader() {
           </Link>
           <Link
             className="button button--outline button--lg"
-            to="/docs/swagger/api-principal">
+            to="/swagger-api-principal">
             Swagger APIs 🔧
           </Link>
         </div>
