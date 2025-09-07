@@ -6,8 +6,8 @@ import {themes as openApiThemes} from 'docusaurus-theme-openapi-docs';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'API Documentation',
-  tagline: 'Documentação completa da API',
+  title: 'CreditCheck API',
+  tagline: 'Solução completa para consulta e análise de contratos de crédito',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -75,9 +75,9 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: { 
-      title: 'API Documentations',
+      title: 'CreditCheck API',
       logo: {
-        alt: 'API Logo',
+        alt: 'CreditCheck Logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -107,19 +107,14 @@ const config: Config = {
           ],
         },
         {
-          type: 'dropdown',
-          label: '📈 Timeline',
+          label: '📈 Timeline Interativa',
+          to: '/timeline-personalizada',
           position: 'left',
-          items: [
-            {
-              label: 'Timeline Básica',
-              to: '/timeline-produto',
-            },
-            {
-              label: 'Timeline Detalhada',
-              to: '/timeline-personalizada',
-            },
-          ],
+        },
+        {
+          label: '🏦 Sobre o Produto',
+          to: '/sobre-produto',
+          position: 'left',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {

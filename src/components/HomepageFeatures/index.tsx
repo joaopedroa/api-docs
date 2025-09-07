@@ -11,32 +11,32 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'Consulta Rápida e Segura',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Acesse informações de contratos de crédito de forma instantânea e segura. 
+        Nossa API oferece resposta em menos de 200ms com criptografia end-to-end.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Análise Inteligente',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Utilize nossa inteligência artificial para análise de risco, 
+        scoring de crédito e recomendações personalizadas baseadas no histórico do cliente.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Integração Simples',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        SDKs disponíveis para múltiplas linguagens e documentação interativa. 
+        Integre em minutos com nossa API RESTful completa.
       </>
     ),
   },

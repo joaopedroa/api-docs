@@ -6,56 +6,60 @@ const timelineData = [
   {
     id: 1,
     date: 'Janeiro 2024',
-    title: 'Concepção do Projeto',
-    description: 'Idealização e planejamento inicial do produto. Definição dos requisitos básicos e arquitetura inicial.',
+    title: 'Concepção do CreditCheck',
+    description: 'Idealização e planejamento inicial da solução de consulta de contratos de crédito. Definição dos requisitos de compliance e arquitetura de segurança.',
     status: 'completed',
     category: 'planejamento',
     features: [
-      'Definição da arquitetura do sistema',
-      'Escolha das tecnologias (React, Node.js)',
-      'Criação do backlog inicial'
+      'Definição da arquitetura de microserviços',
+      'Escolha das tecnologias (Node.js, PostgreSQL, Redis)',
+      'Criação do backlog de funcionalidades de crédito',
+      'Definição dos requisitos de LGPD e compliance'
     ],
     // Adicione métricas importantes
     metrics: {
-      'Tempo de desenvolvimento': '2 semanas',
-      'Equipe envolvida': '3 pessoas',
-      'Orçamento': 'R$ 50.000'
+      'Tempo de planejamento': '3 semanas',
+      'Equipe envolvida': '5 pessoas',
+      'Orçamento inicial': 'R$ 150.000'
     }
   },
   {
     id: 2,
     date: 'Fevereiro 2024',
-    title: 'Desenvolvimento MVP',
-    description: 'Desenvolvimento da versão mínima viável com funcionalidades essenciais.',
+    title: 'Desenvolvimento MVP CreditCheck',
+    description: 'Desenvolvimento da versão mínima viável com funcionalidades essenciais de consulta de contratos de crédito.',
     status: 'completed',
     category: 'desenvolvimento',
     features: [
-      'Sistema de autenticação básico',
-      'Interface principal do usuário',
-      'Integração com banco de dados'
+      'Sistema de autenticação OAuth 2.0',
+      'API de consulta de contratos',
+      'Integração com bureau de crédito',
+      'Sistema de logs e auditoria'
     ],
     metrics: {
-      'Usuários beta': '50',
-      'Bugs encontrados': '12',
-      'Tempo de desenvolvimento': '4 semanas'
+      'Contratos integrados': '500.000+',
+      'Tempo de resposta': '< 200ms',
+      'Tempo de desenvolvimento': '6 semanas'
     }
   },
   {
     id: 3,
     date: 'Março 2024',
-    title: 'Primeira Versão Beta',
-    description: 'Lançamento da versão beta para testes internos e validação com usuários piloto.',
+    title: 'Primeira Versão Beta CreditCheck',
+    description: 'Lançamento da versão beta para testes com instituições financeiras parceiras e validação de compliance.',
     status: 'completed',
     category: 'testes',
     features: [
-      'Testes de usabilidade',
-      'Correção de bugs críticos',
-      'Feedback dos usuários piloto'
+      'Testes de performance com grandes volumes',
+      'Validação de compliance LGPD',
+      'Feedback de instituições financeiras',
+      'Testes de segurança e penetração'
     ],
     metrics: {
-      'Usuários ativos': '150',
-      'Satisfação': '4.2/5',
-      'Bugs corrigidos': '8'
+      'Instituições parceiras': '5',
+      'Consultas testadas': '1M+',
+      'Satisfação': '4.7/5',
+      'Tempo de resposta médio': '150ms'
     }
   },
   {
@@ -277,6 +281,7 @@ const categoryIcons = {
 function TimelinePersonalizada() {
   const [filter, setFilter] = useState('all');
   const [showMetrics, setShowMetrics] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const filteredData = filter === 'all' 
     ? timelineData 
@@ -286,9 +291,23 @@ function TimelinePersonalizada() {
   const inProgressItems = timelineData.filter(item => item.status === 'in-progress');
   const plannedItems = timelineData.filter(item => item.status === 'planned');
 
+  const handleFilterChange = (newFilter) => {
+    setIsAnimating(true);
+    setTimeout(() => {
+      setFilter(newFilter);
+      setIsAnimating(false);
+    }, 150);
+  };
+
   return (
     <Layout title="Timeline do Produto" description="Histórico completo do desenvolvimento do produto">
-      <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ 
+        padding: '20px', 
+        maxWidth: '1200px', 
+        margin: '0 auto',
+        width: '100%',
+        minWidth: '800px' // Largura mínima para evitar compressão
+      }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <h1 style={{ fontSize: '2.5rem', marginBottom: '10px', color: '#2c3e50' }}>
             📈 Timeline do Produto
@@ -309,57 +328,69 @@ function TimelinePersonalizada() {
         }}>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <button
-              onClick={() => setFilter('all')}
+              onClick={() => handleFilterChange('all')}
+              disabled={isAnimating}
               style={{
                 padding: '8px 16px',
                 border: 'none',
                 borderRadius: '20px',
                 backgroundColor: filter === 'all' ? '#3498db' : '#ecf0f1',
                 color: filter === 'all' ? 'white' : '#2c3e50',
-                cursor: 'pointer',
-                fontWeight: '500'
+                cursor: isAnimating ? 'not-allowed' : 'pointer',
+                fontWeight: '500',
+                opacity: isAnimating ? 0.7 : 1,
+                transition: 'opacity 0.2s ease'
               }}
             >
               Todos ({timelineData.length})
             </button>
             <button
-              onClick={() => setFilter('completed')}
+              onClick={() => handleFilterChange('completed')}
+              disabled={isAnimating}
               style={{
                 padding: '8px 16px',
                 border: 'none',
                 borderRadius: '20px',
                 backgroundColor: filter === 'completed' ? '#2ecc71' : '#ecf0f1',
                 color: filter === 'completed' ? 'white' : '#2c3e50',
-                cursor: 'pointer',
-                fontWeight: '500'
+                cursor: isAnimating ? 'not-allowed' : 'pointer',
+                fontWeight: '500',
+                opacity: isAnimating ? 0.7 : 1,
+                transition: 'opacity 0.2s ease'
               }}
             >
               Concluído ({completedItems.length})
             </button>
             <button
-              onClick={() => setFilter('in-progress')}
+              onClick={() => handleFilterChange('in-progress')}
+              disabled={isAnimating}
               style={{
                 padding: '8px 16px',
                 border: 'none',
                 borderRadius: '20px',
                 backgroundColor: filter === 'in-progress' ? '#f39c12' : '#ecf0f1',
                 color: filter === 'in-progress' ? 'white' : '#2c3e50',
-                cursor: 'pointer',
-                fontWeight: '500'
+                cursor: isAnimating ? 'not-allowed' : 'pointer',
+                fontWeight: '500',
+                opacity: isAnimating ? 0.7 : 1,
+                transition: 'opacity 0.2s ease'
               }}
             >
               Em Andamento ({inProgressItems.length})
             </button>
             <button
-              onClick={() => setFilter('planned')}
+              onClick={() => handleFilterChange('planned')}
+              disabled={isAnimating}
               style={{
                 padding: '8px 16px',
                 border: 'none',
                 borderRadius: '20px',
                 backgroundColor: filter === 'planned' ? '#3498db' : '#ecf0f1',
                 color: filter === 'planned' ? 'white' : '#2c3e50',
-                cursor: 'pointer',
-                fontWeight: '500'
+                cursor: isAnimating ? 'not-allowed' : 'pointer',
+                fontWeight: '500',
+                opacity: isAnimating ? 0.7 : 1,
+                transition: 'opacity 0.2s ease'
               }}
             >
               Planejado ({plannedItems.length})
@@ -417,23 +448,42 @@ function TimelinePersonalizada() {
         </div>
 
         {/* Timeline */}
-        <div style={{ position: 'relative' }}>
+        <div style={{ 
+          position: 'relative',
+          minHeight: '600px', // Altura mínima maior para estabilidade
+          width: '100%', // Largura total do container
+          minWidth: '800px', // Largura mínima para evitar compressão
+          transition: 'all 0.3s ease', // Transição suave
+          opacity: isAnimating ? 0.7 : 1 // Indicador visual de animação
+        }}>
           {/* Linha vertical */}
           <div style={{
             position: 'absolute',
             left: '30px',
             top: '0',
-            bottom: '0',
+            height: `${Math.max(600, filteredData.length * 250 + 200)}px`, // Altura baseada no número de itens com margem
             width: '4px',
             backgroundColor: '#e0e0e0',
-            borderRadius: '2px'
+            borderRadius: '2px',
+            transition: 'height 0.3s ease' // Transição suave para a linha
           }}></div>
 
-          {filteredData.map((item, index) => (
+          {/* Container para os itens da timeline */}
+          <div style={{
+            width: '100%',
+            minWidth: '800px',
+            position: 'relative'
+          }}>
+            {filteredData.map((item, index) => (
             <div key={item.id} style={{ 
               position: 'relative', 
               marginBottom: '40px',
-              marginLeft: '60px'
+              marginLeft: '60px',
+              width: 'calc(100% - 60px)', // Largura consistente
+              minWidth: '600px', // Largura mínima para os cards
+              opacity: 1,
+              transform: 'translateY(0)',
+              transition: 'opacity 0.3s ease, transform 0.3s ease'
             }}>
               {/* Ponto da timeline */}
               <div style={{
@@ -464,6 +514,8 @@ function TimelinePersonalizada() {
                 padding: '25px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                 position: 'relative',
+                width: '100%', // Largura total do container pai
+                minWidth: '500px', // Largura mínima para o card
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease'
               }}
               onMouseEnter={(e) => {
@@ -608,7 +660,8 @@ function TimelinePersonalizada() {
                 </div>
               </div>
             </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Resumo atual */}
@@ -624,7 +677,7 @@ function TimelinePersonalizada() {
             marginBottom: '20px',
             textAlign: 'center'
           }}>
-            🎯 Onde Estamos Agora
+            🎯 Onde Estamos Agora - CreditCheck API
           </h2>
           <div style={{ 
             display: 'grid', 
@@ -634,19 +687,21 @@ function TimelinePersonalizada() {
             <div>
               <h3 style={{ color: '#2c3e50', marginBottom: '10px' }}>✅ Conquistas</h3>
               <ul style={{ color: '#555', lineHeight: '1.6' }}>
-                <li>Produto lançado e funcionando</li>
-                <li>Base de usuários ativa</li>
-                <li>Integrações implementadas</li>
-                <li>Segurança e compliance</li>
+                <li>API de consulta de contratos funcionando</li>
+                <li>Integração com principais bureaus de crédito</li>
+                <li>Compliance LGPD e segurança implementada</li>
+                <li>Base de 2M+ contratos consultáveis</li>
+                <li>Instituições financeiras ativas</li>
               </ul>
             </div>
             <div>
               <h3 style={{ color: '#2c3e50', marginBottom: '10px' }}>🚀 Próximos Passos</h3>
               <ul style={{ color: '#555', lineHeight: '1.6' }}>
-                <li>Implementação de IA</li>
-                <li>Expansão internacional</li>
-                <li>Plataforma de desenvolvedores</li>
-                <li>Novas funcionalidades</li>
+                <li>IA para análise de risco avançada</li>
+                <li>Expansão para outros países da América Latina</li>
+                <li>Plataforma de desenvolvedores com SDKs</li>
+                <li>Análise preditiva de inadimplência</li>
+                <li>Integração com blockchain para contratos</li>
               </ul>
             </div>
           </div>
