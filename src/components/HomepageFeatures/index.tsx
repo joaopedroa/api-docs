@@ -5,52 +5,88 @@ import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  icon: string;
   description: ReactNode;
+  metrics: string;
+  highlight: string;
+  features: string[];
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Consulta Rápida e Segura',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Performance Excepcional',
+    icon: '⚡',
     description: (
       <>
-        Acesse informações de contratos de crédito de forma instantânea e segura. 
-        Nossa API oferece resposta em menos de 200ms com criptografia end-to-end.
+        Nossa infraestrutura de alta performance garante respostas ultra-rápidas 
+        para consultas de contratos de crédito, com latência média de 150ms.
       </>
     ),
+    metrics: '< 150ms',
+    highlight: 'Ultra-rápido',
+    features: ['Criptografia AES-256', 'Cache inteligente', 'CDN global', '99.9% uptime']
   },
   {
-    title: 'Análise Inteligente',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Inteligência Artificial Avançada',
+    icon: '🤖',
     description: (
       <>
-        Utilize nossa inteligência artificial para análise de risco, 
-        scoring de crédito e recomendações personalizadas baseadas no histórico do cliente.
+        Algoritmos de machine learning proprietários para análise de risco em tempo real, 
+        scoring de crédito preciso e detecção de fraudes.
       </>
     ),
+    metrics: '95%',
+    highlight: 'Precisão',
+    features: ['ML em tempo real', 'Scoring automático', 'Detecção de fraudes', 'Recomendações IA']
   },
   {
-    title: 'Integração Simples',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Integração Enterprise',
+    icon: '🔗',
     description: (
       <>
-        SDKs disponíveis para múltiplas linguagens e documentação interativa. 
-        Integre em minutos com nossa API RESTful completa.
+        SDKs nativos para todas as principais linguagens, documentação interativa 
+        e suporte completo para integração em ambientes corporativos.
       </>
     ),
+    metrics: '8+',
+    highlight: 'Linguagens',
+    features: ['SDKs nativos', 'RESTful API', 'Webhooks', 'Documentação viva']
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, icon, description, metrics, highlight, features}: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
+      <div className={styles.featureCard}>
+        {/* Header com ícone e métrica */}
+        <div className={styles.featureHeader}>
+          <div className={styles.featureIcon}>
+            <span className={styles.iconEmoji}>{icon}</span>
+          </div>
+          <div className={styles.featureMetrics}>
+            <div className={styles.metricValue}>{metrics}</div>
+            <div className={styles.metricLabel}>{highlight}</div>
+          </div>
+        </div>
+
+        {/* Conteúdo principal */}
+        <div className={styles.featureContent}>
+          <Heading as="h3" className={styles.featureTitle}>{title}</Heading>
+          <p className={styles.featureDescription}>{description}</p>
+          
+          {/* Lista de features */}
+          <div className={styles.featureList}>
+            {features.map((feature, index) => (
+              <div key={index} className={styles.featureItem}>
+                <span className={styles.featureCheck}>✓</span>
+                <span className={styles.featureText}>{feature}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Gradiente de fundo */}
+        <div className={styles.featureGradient}></div>
       </div>
     </div>
   );
