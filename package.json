@@ -24,6 +24,8 @@
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "redoc-cli": "^0.13.21",
+    "swagger-ui-dist": "^5.28.1",
     "swagger-ui-react": "^5.28.1"
   },
   "devDependencies": {
