@@ -1,0 +1,289 @@
+openapi: 3.0.0
+info:
+  title: Minha API
+  description: Documentação da API do meu projeto
+  version: 1.0.0
+  contact:
+    name: Suporte da API
+    email: suporte@exemplo.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.exemplo.com/v1
+    description: Servidor de produção
+  - url: https://staging-api.exemplo.com/v1
+    description: Servidor de staging
+
+paths:
+  /users:
+    get:
+      tags:
+        - Usuários
+      summary: Listar usuários
+      description: Retorna uma lista de todos os usuários
+      parameters:
+        - name: page
+          in: query
+          description: Número da página
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Número de itens por página
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Lista de usuários retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          description: Parâmetros inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Usuários
+      summary: Criar usuário
+      description: Cria um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Usuário já existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{id}:
+    get:
+      tags:
+        - Usuários
+      summary: Obter usuário por ID
+      description: Retorna os dados de um usuário específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Usuário encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Usuários
+      summary: Atualizar usuário
+      description: Atualiza os dados de um usuário
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: Usuário atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Usuários
+      summary: Deletar usuário
+      description: Remove um usuário do sistema
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Usuário deletado com sucesso
+        '404':
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID único do usuário
+          example: 1
+        name:
+          type: string
+          description: Nome completo do usuário
+          example: "João Silva"
+        email:
+          type: string
+          format: email
+          description: Email do usuário
+          example: "joao@exemplo.com"
+        createdAt:
+          type: string
+          format: date-time
+          description: Data de criação do usuário
+          example: "2023-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data da última atualização
+          example: "2023-01-01T00:00:00Z"
+      required:
+        - id
+        - name
+        - email
+        - createdAt
+
+    CreateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nome completo do usuário
+          example: "João Silva"
+        email:
+          type: string
+          format: email
+          description: Email do usuário
+          example: "joao@exemplo.com"
+      required:
+        - name
+        - email
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nome completo do usuário
+          example: "João Silva Santos"
+        email:
+          type: string
+          format: email
+          description: Email do usuário
+          example: "joao.santos@exemplo.com"
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Página atual
+          example: 1
+        limit:
+          type: integer
+          description: Itens por página
+          example: 10
+        total:
+          type: integer
+          description: Total de itens
+          example: 100
+        totalPages:
+          type: integer
+          description: Total de páginas
+          example: 10
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Código do erro
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          description: Mensagem de erro
+          example: "Os dados fornecidos são inválidos"
+        details:
+          type: object
+          description: Detalhes adicionais do erro
+          example:
+            field: "email"
+            reason: "Email já está em uso"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT para autenticação
+
+security:
+  - bearerAuth: []
