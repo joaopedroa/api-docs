@@ -16,14 +16,14 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://SEU_USUARIO.github.io',
+  url: 'https://joaopedroa.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/api-docs/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'SEU_USUARIO', // Usually your GitHub org/user name.
+  organizationName: 'joaopedroa', // Usually your GitHub org/user name.
   projectName: 'api-docs', // Usually your repo name.
 
   onBrokenLinks: 'throw',
