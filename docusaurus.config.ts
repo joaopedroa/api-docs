@@ -117,8 +117,23 @@ const config: Config = {
           position: 'left',
         },
         {
+          label: '📊 Timeline Visual',
+          to: '/timeline-visual',
+          position: 'left',
+        },
+        {
+          label: '📈 Timeline Simples',
+          to: '/timeline-simples',
+          position: 'left',
+        },
+        {
           label: '🏦 Sobre o Produto',
           to: '/sobre-produto',
+          position: 'left',
+        },
+        {
+          label: '❓ FAQ',
+          to: '/faq',
           position: 'left',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
