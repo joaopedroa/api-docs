@@ -112,6 +112,11 @@ const config: Config = {
           position: 'left',
         },
         {
+          label: '🗺️ Roadmap',
+          to: '/roadmap-produto',
+          position: 'left',
+        },
+        {
           label: '🏦 Sobre o Produto',
           to: '/sobre-produto',
           position: 'left',
